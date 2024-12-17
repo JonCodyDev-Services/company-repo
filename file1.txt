@@ -1,0 +1,2 @@
+here is line 1 of file1
+line 2 sweet text
