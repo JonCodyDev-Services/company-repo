@@ -44,10 +44,6 @@ jobs:
       - name: Modify files
         run: echo "Changes made by the workflow" >> file.txt
 
-      # Pull the latest changes from remote repository to avoid conflicts
-      - name: Pull latest changes
-        run: git pull origin main --rebase
-
       # Commit the changes (if needed)
       - name: Commit changes
         run: |
@@ -55,6 +51,18 @@ jobs:
           git config --global user.email "actions@github.com"
           git add .
           git commit -m "Update file after build"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Pull the latest changes from remote
+      - name: Pull latest changes from remote
+        run: |
+          git fetch origin
+          git rebase origin/main
+
+      # Push the committed changes
+      - name: Push changes
+        run: |
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
