@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "build": "echo \"Building project...\" && mkdir -p dist && rsync -av --exclude dist/ . dist/"
+      "test": "jest",
+      "build": "echo 'No build step required'"
   },
   "dependencies": {
       "express": "^4.21.2"
