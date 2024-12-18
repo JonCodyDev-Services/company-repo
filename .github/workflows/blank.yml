@@ -1,6 +1,5 @@
 permissions:
   contents: write  # Allows write access to the repository contents
-  projects_v2: write  # Allows access to manage GitHub Projects (for moving issues)
 
 name: CI
 
