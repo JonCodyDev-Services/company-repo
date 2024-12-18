@@ -1,5 +1,6 @@
 permissions:
   contents: write  # Allows write access to the repository contents
+  projects_v2: write  # Allows write access to GitHub Projects v2
 
 name: CI
 
@@ -73,23 +74,31 @@ jobs:
             // Use your actual project ID
             const project_id = '2';  // Your GitHub Project ID
 
-            // Get project columns
-            const columns = await github.projects_v2.listColumns({
-              project_id: project_id,
-            });
-
-            // Find the "In Progress" column
-            const inProgressColumn = columns.data.find(column => column.name === project_column_name);
-            if (inProgressColumn) {
-              // Move the issue to the "In Progress" column
-              await github.projects_v2.createCard({
-                column_id: inProgressColumn.id,
-                content_id: issue_number,
-                content_type: 'Issue',
+            try {
+              // Get project columns using octokit API
+              const columns = await github.rest.projects.listColumns({
+                project_id: project_id,
               });
-              console.log(`Issue #${issue_number} moved to "${project_column_name}"`);
-            } else {
-              console.log(`Column "${project_column_name}" not found.`);
+
+              // Log the columns for debugging
+              console.log('Columns Data:', columns.data);
+
+              // Find the "In Progress" column
+              const inProgressColumn = columns.data.find(column => column.name === project_column_name);
+              if (inProgressColumn) {
+                // Move the issue to the "In Progress" column
+                await github.rest.projects.createCard({
+                  column_id: inProgressColumn.id,
+                  content_id: issue_number,
+                  content_type: 'Issue',
+                });
+                console.log(`Issue #${issue_number} moved to "${project_column_name}"`);
+              } else {
+                console.log(`Column "${project_column_name}" not found.`);
+              }
+            } catch (error) {
+              console.error('Error in API call:', error);
+              throw error; // Rethrow to log as part of the action error
             }
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub automatically handles this token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
