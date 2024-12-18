@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "echo \"Building project...\" && mkdir -p dist && cp -r * dist/"
+    "build": "echo \"Building project...\" && mkdir -p dist && cp -r !(dist) dist/"
   },
   "dependencies": {
       "express": "^4.21.2"
