@@ -1,5 +1,6 @@
 permissions:
-  contents: write  # This gives write access to the repository contents
+  contents: write  # Allows write access to the repository contents
+  projects_v2: write  # Allows access to manage GitHub Projects (for moving issues)
 
 name: CI
 
@@ -17,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checks out the repository
+      # Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -31,7 +32,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Run tests (if you have tests set up)
+      # Run tests (if set up)
       - name: Run tests
         run: npm test
 
@@ -56,8 +57,7 @@ jobs:
 
       # Final message after build
       - name: Final message
-        run: |
-          echo "Project built, tests passed."
+        run: echo "Project built, tests passed."
 
   move_to_in_progress:
     runs-on: ubuntu-latest
@@ -71,11 +71,11 @@ jobs:
             const issue_number = context.payload.issue.number;
             const project_column_name = 'In Progress';  // The column you want to move the issue to
 
-            // Replace with your actual project ID
-            const project_id = 'YOUR_PROJECT_ID'; 
+            // Use your actual project ID
+            const project_id = '2';  // Your GitHub Project ID
 
             // Get project columns
-            const columns = await github.projects.listColumns({
+            const columns = await github.projects_v2.listColumns({
               project_id: project_id,
             });
 
@@ -83,7 +83,7 @@ jobs:
             const inProgressColumn = columns.data.find(column => column.name === project_column_name);
             if (inProgressColumn) {
               // Move the issue to the "In Progress" column
-              await github.projects.createCard({
+              await github.projects_v2.createCard({
                 column_id: inProgressColumn.id,
                 content_id: issue_number,
                 content_type: 'Issue',
@@ -93,4 +93,4 @@ jobs:
               console.log(`Column "${project_column_name}" not found.`);
             }
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub automatically handles this token
