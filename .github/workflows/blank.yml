@@ -5,80 +5,22 @@ permissions:
 name: CI
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
   issues:
-    types: [opened, assigned]  # Trigger workflow when an issue is created or assigned
-  workflow_dispatch:
+    types: [opened]  # Trigger workflow when an issue is created (opened)
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # Set up Node.js environment
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '16'
-
-      # Install dependencies
-      - name: Install dependencies
-        run: npm install
-
-      # Run tests (if set up)
-      - name: Run tests
-        run: npm test
-
-      # Build project
-      - name: Build project
-        run: npm run build
-
-      # Commit any changes (if needed)
-      - name: Commit changes
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add . 
-          # Check if there are any changes before committing
-          if [[ `git diff --cached --stat` != '' ]]; then
-            git commit -m "Update file after build"
-            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
-          else
-            echo "No changes to commit"
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   add_issue_to_project:
     runs-on: ubuntu-latest
-    needs: build  # This job runs after the build job
+
     steps:
       - name: Debug event details
         run: |
           echo "Event Name: ${{ github.event_name }}"
           echo "Event Action: ${{ github.event.action }}"
-          echo "Event Type: ${{ github.event_type }}"
           echo "Full Event Payload: ${{ toJson(github.event) }}"
 
-      - name: Check if condition met
-        run: |
-          echo "Event Name: ${{ github.event_name }}"
-          echo "Event Action: ${{ github.event.action }}"
-          echo "Condition met: ${{ github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'assigned') }}"
-          if [[ "${{ github.event_name }}" == "issues" && ( "${{ github.event.action }}" == "opened" || "${{ github.event.action }}" == "assigned" ) ]]; then
-            echo "Condition met. Proceeding to add issue to project."
-          else
-            echo "Condition NOT met. Job will be skipped."
-          fi
-
       - name: Add issue to project board
-        if: ${{ github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'assigned') }}
+        if: ${{ github.event_name == 'issues' && github.event.action == 'opened' }}
         uses: actions/github-script@v5
         with:
           script: |
