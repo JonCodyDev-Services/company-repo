@@ -60,13 +60,20 @@ jobs:
     needs: build  # This job runs after the build job
     if: github.event_name == 'issues' && (github.event.action == 'opened' || github.event.action == 'assigned')
     steps:
+      - name: Log event payload (for debugging)
+        run: |
+          echo "Event Name: ${{ github.event_name }}"
+          echo "Event Action: ${{ github.event.action }}"
+          echo "Issue Number: ${{ github.event.issue.number }}"
+          echo "Issue Title: ${{ github.event.issue.title }}"
+
       - name: Add issue to project board
         uses: actions/github-script@v5
         with:
           script: |
             const issue_number = context.payload.issue.number;
-            const project_id = 'YOUR_PROJECT_ID';  // Replace with your GitHub Project ID
-            const column_name = 'Backlog';  // Default column to add the issue to (e.g., "Backlog")
+            const project_id = '2';  # Replace this with your GitHub Project ID (you mentioned this before)
+            const column_name = 'Backlog';  # Default column to add the issue to (e.g., "Backlog")
             
             try {
               // Fetch columns in the project
