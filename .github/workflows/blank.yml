@@ -44,6 +44,10 @@ jobs:
       - name: Modify files
         run: echo "Changes made by the workflow" >> file.txt
 
+      # Pull the latest changes from remote repository to avoid conflicts
+      - name: Pull latest changes
+        run: git pull origin main --rebase
+
       # Commit the changes (if needed)
       - name: Commit changes
         run: |
