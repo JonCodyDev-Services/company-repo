@@ -1,3 +1,6 @@
+permissions:
+  contents: write  # This gives write access to the repository contents
+
 name: CI
 
 on:
