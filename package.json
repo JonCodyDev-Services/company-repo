@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-      "test": "jest",
-      "build": "echo \"Building project...\" && mkdir -p dist && cp -r src/* dist/"
+    "test": "jest",
+    "build": "echo \"Building project...\" && mkdir -p dist && cp -r * dist/"
   },
   "dependencies": {
       "express": "^4.21.2"
