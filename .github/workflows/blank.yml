@@ -1,6 +1,6 @@
 permissions:
   contents: write  # Allows write access to the repository contents
-  projects: write  # Allows write access to GitHub Projects
+  issues: write    # Allows write access to issues
 
 name: CI
 
@@ -60,7 +60,7 @@ jobs:
         with:
           script: |
             const issue_number = context.payload.issue.number;
-            const project_id = '2';  // Replace with your GitHub Project ID
+            const project_id = 'YOUR_PROJECT_ID';  // Replace with your GitHub Project ID
             const column_name = 'Backlog';  // Default column to add the issue to (e.g., "Backlog")
             
             try {
