@@ -27,7 +27,7 @@ jobs:
         with:
           script: |
             const issue_number = context.payload.issue.number;
-            const project_id = '2';  // Replace this with your GitHub Project ID
+            const project_id = '2';  // Confirmed GitHub Project ID
             const column_name = 'Backlog';  // Default column to add the issue to (e.g., "Backlog")
             
             try {
