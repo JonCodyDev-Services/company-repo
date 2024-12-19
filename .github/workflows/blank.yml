@@ -3,12 +3,11 @@ permissions:
   issues: write
   packages: write
 
-
 name: Assign Issues to Project Board
 
 on:
   issues:
-    types: [opened]  # Trigger when an issue is opened or edited
+    types: [opened]  # Trigger when an issue is opened
 
 jobs:
   assign-issue:
@@ -21,11 +20,36 @@ jobs:
         uses: actions/checkout@v2  # Optional, depending on your needs
 
       - name: Assign issue to project board
-        uses: assign-issue-to-project@v2  # GitHub Action to add issue to a project board
+        uses: actions/github-script@v5  # Correct version of the GitHub Script action
         with:
-          project-url: https://github.com/orgs/JonCodyDev-Services/projects/2  # Replace with your project URL
-          issue-number: ${{ github.event.issue.number }}  # The issue number from the event payload
+          script: |
+            const issue_number = context.payload.issue.number;
+            const project_id = '2';  // Replace with your project ID
+            const column_name = 'Backlog';  // Replace with your column name
+            
+            try {
+              // Fetch columns in the project
+              const columns = await github.rest.projects.listColumns({
+                project_id: project_id
+              });
+              
+              // Find the target column by name
+              const targetColumn = columns.data.find(column => column.name === column_name);
+              
+              if (targetColumn) {
+                // Add the issue to the selected column
+                await github.rest.projects.createCard({
+                  column_id: targetColumn.id,
+                  content_id: issue_number,
+                  content_type: 'Issue',
+                });
+                console.log(`Issue #${issue_number} added to column "${column_name}"`);
+              } else {
+                console.log(`Column "${column_name}" not found in project ${project_id}`);
+              }
+            } catch (error) {
+              console.error('Error adding issue to project:', error);
+              throw error;
+            }
         env:
           GITHUB_TOKEN: ${{ secrets.COMPANY_REPO_ACTIONS_TOKEN }}  # Use your GitHub token
-
-
