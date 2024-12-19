@@ -1,6 +1,9 @@
 permissions:
-  contents: write  # Allows write access to the repository contents
-  issues: write    # Allows write access to issues
+  issues: write     # Allow write access to issues
+  actions: write    # Allow workflow to trigger actions
+  workflows: write  # Allow the workflow to run and manage actions
+  webhooks: write   # Allow handling webhooks for actions
+  secrets: read     # Allow reading secrets (like your fine-grained token)
 
 name: CI
 
