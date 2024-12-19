@@ -8,22 +8,24 @@ name: Assign Issues to Project Board
 
 on:
   issues:
-    types: [opened, edited]
+    types: [opened, edited]  # Trigger when an issue is opened or edited
 
 jobs:
   assign-issue:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write      # Allows workflow to interact with issues
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2  # Optional, depending on your needs
 
       - name: Assign issue to project board
-        uses: peter-evans/issue-assign-to-project@v2
-
+        uses: assign-issue-to-project@v2  # GitHub Action to add issue to a project board
         with:
-          project-url: https://github.com/orgs/JonCodyDev-Services/projects/2
-          issue-number: ${{ github.event.issue.number }}
+          project-url: https://github.com/orgs/JonCodyDev-Services/projects/2  # Replace with your project URL
+          issue-number: ${{ github.event.issue.number }}  # The issue number from the event payload
         env:
-          GITHUB_TOKEN: ${{ secrets.COMPANY_REPO_ACTIONS_TOKEN }}  # Use GitHub token from secrets
+          GITHUB_TOKEN: ${{ secrets.COMPANY_REPO_ACTIONS_TOKEN }}  # Use your GitHub token
+
 
