@@ -8,7 +8,7 @@ name: Assign Issues to Project Board
 
 on:
   issues:
-    types: [opened, edited]  # Trigger when an issue is opened or edited
+    types: [opened]  # Trigger when an issue is opened or edited
 
 jobs:
   assign-issue:
