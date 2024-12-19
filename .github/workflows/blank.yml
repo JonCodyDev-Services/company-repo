@@ -2,7 +2,7 @@ permissions:
   issues: write     # Write access to issues
   actions: write    # Write access to actions (allows action execution)
   contents: read    # Read access to repository contents (needed for checkout)
-
+  projects: write   # Write access to projects (allows managing project boards)
 
 name: CI
 
