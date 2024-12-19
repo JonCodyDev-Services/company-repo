@@ -52,4 +52,4 @@ jobs:
               throw error;
             }
         env:
-          GITHUB_TOKEN: ${{ secrets.PROJECT_ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.COMPANY_REPO_ACTIONS_TOKEN }}
